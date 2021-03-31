@@ -25,35 +25,35 @@
             routes: [
               {
                 path: '/',
-                redirect: '/welcome',
+                redirect: '/resume',
               },
               {
-                path: '/welcome',
-                name: 'welcome',
+                path: '/resume',
+                name: 'resume',
                 icon: 'smile',
-                component: './Welcome',
+                component: './Resume',
               },
+              // {
+              //   path: '/admin',
+              //   name: 'admin',
+              //   icon: 'crown',
+              //   component: './Admin',
+              //   authority: ['admin'],
+              //   routes: [
+              //     {
+              //       path: '/admin/sub-page',
+              //       name: 'sub-page',
+              //       icon: 'smile',
+              //       component: './Welcome',
+              //       authority: ['admin'],
+              //     },
+              //   ],
+              // },
               {
-                path: '/admin',
-                name: 'admin',
-                icon: 'crown',
-                component: './Admin',
-                authority: ['admin'],
-                routes: [
-                  {
-                    path: '/admin/sub-page',
-                    name: 'sub-page',
-                    icon: 'smile',
-                    component: './Welcome',
-                    authority: ['admin'],
-                  },
-                ],
-              },
-              {
-                name: 'list.table-list',
+                name: 'list.manage-task',
                 icon: 'table',
-                path: '/list',
-                component: './TableList',
+                path: '/task',
+                component: './ManageTask',
               },
               {
                 component: './404',

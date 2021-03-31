@@ -1,45 +1,40 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Request, Response } from 'express';
 import { parse } from 'url';
-import { TableListItem, TableListParams } from '@/pages/TableList/data';
+import { TaskItem, TaskListParams } from '@/pages/ManageTask/data';
 
 // mock tableListDataSource
 const genList = (current: number, pageSize: number) => {
-  const tableListDataSource: TableListItem[] = [];
+  const tableListDataSource: TaskItem[] = [];
 
+  const randomDateTime = (start: Date, end: Date, startHour: number, endHour: number) => {
+    const date = new Date(+start + Math.random() * (end.getDate() - start.getDate()));
+    const hour = startHour + Math.random() * (endHour - startHour) | 0;
+    date.setHours(hour);
+    return date;
+  }
   for (let i = 0; i < pageSize; i += 1) {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
-      key: index,
-      disabled: i % 6 === 0,
-      href: 'https://ant.design',
-      avatar: [
-        'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
-        'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png',
-      ][i % 2],
-      name: `TradeCode ${index}`,
-      owner: '曲丽丽',
-      desc: '这是一段描述',
-      callNo: Math.floor(Math.random() * 1000),
-      status: Math.floor(Math.random() * 10) % 4,
-      updatedAt: new Date(),
-      createdAt: new Date(),
-      progress: Math.ceil(Math.random() * 100),
+      id: index,
+      name: `task ${index + 1}`,
+      startAt: randomDateTime(new Date(2021, index + 1, index), new Date(2021, index + 1, index), 8, 12),
+      endAt: randomDateTime(new Date(2021, index + 1, index), new Date(2021, index + 1, index), 13, 17),
     });
   }
   tableListDataSource.reverse();
   return tableListDataSource;
 };
 
-let tableListDataSource = genList(1, 100);
+let tableListDataSource = genList(1, 10);
 
-function getRule(req: Request, res: Response, u: string) {
+function getTask(req: Request, res: Response, u: string) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
   }
   const { current = 1, pageSize = 10 } = req.query;
-  const params = (parse(realUrl, true).query as unknown) as TableListParams;
+  const params = (parse(realUrl, true).query as unknown) as TaskListParams;
 
   let dataSource = [...tableListDataSource].slice(
     ((current as number) - 1) * (pageSize as number),
@@ -89,6 +84,12 @@ function getRule(req: Request, res: Response, u: string) {
   if (params.name) {
     dataSource = dataSource.filter((data) => data.name.includes(params.name || ''));
   }
+  if (params.startAt) {
+    dataSource = dataSource.filter((data) => data.startAt.toISOString().substring(0, 10) == params.startAt?.toString().substring(0, 10) ? data : '')
+  }
+  if (params.endAt) {
+    dataSource = dataSource.filter((data) => data.endAt.toISOString().substring(0, 10) == params.endAt?.toString().substring(0, 10) ? data : '')
+  }
   const result = {
     data: dataSource,
     total: tableListDataSource.length,
@@ -100,55 +101,43 @@ function getRule(req: Request, res: Response, u: string) {
   return res.json(result);
 }
 
-function postRule(req: Request, res: Response, u: string, b: Request) {
+function postTask(req: Request, res: Response, u: string, b: Request) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
   }
 
   const body = (b && b.body) || req.body;
-  const { method, name, desc, key } = body;
+  const { method, name, startAt, endAt, id } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
     case 'delete':
-      tableListDataSource = tableListDataSource.filter((item) => key.indexOf(item.key) === -1);
+      tableListDataSource = tableListDataSource.filter((item) => item.id != id);
       break;
     case 'post':
       (() => {
-        const i = Math.ceil(Math.random() * 10000);
-        const newRule = {
-          key: tableListDataSource.length,
-          href: 'https://ant.design',
-          avatar: [
-            'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
-            'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png',
-          ][i % 2],
+        const newTask = {
+          id: tableListDataSource.length,
           name,
-          owner: '曲丽丽',
-          desc,
-          callNo: Math.floor(Math.random() * 1000),
-          status: Math.floor(Math.random() * 10) % 2,
-          updatedAt: new Date(),
-          createdAt: new Date(),
-          progress: Math.ceil(Math.random() * 100),
+          startAt,
+          endAt,
         };
-        tableListDataSource.unshift(newRule);
-        return res.json(newRule);
+        tableListDataSource.unshift(newTask);
+        return res.json(newTask);
       })();
       return;
-
     case 'update':
       (() => {
-        let newRule = {};
+        let newTask = {};
         tableListDataSource = tableListDataSource.map((item) => {
-          if (item.key === key) {
-            newRule = { ...item, desc, name };
-            return { ...item, desc, name };
+          if (item.id === id) {
+            newTask = { ...item, name, startAt, endAt };
+            return { ...item, name, startAt, endAt };
           }
           return item;
         });
-        return res.json(newRule);
+        return res.json(newTask);
       })();
       return;
     default:
@@ -166,6 +155,6 @@ function postRule(req: Request, res: Response, u: string, b: Request) {
 }
 
 export default {
-  'GET /api/rule': getRule,
-  'POST /api/rule': postRule,
+  'GET /api/task': getTask,
+  'POST /api/task': postTask,
 };

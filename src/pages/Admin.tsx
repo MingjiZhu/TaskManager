@@ -16,7 +16,7 @@ export default (): React.ReactNode => {
       <Card>
         <Alert
           message={intl.formatMessage({
-            id: 'pages.welcome.alertMessage',
+            id: 'pages.resume.alertMessage',
             defaultMessage: '更快更强的重型组件，已经发布。',
           })}
           type="success"
@@ -28,7 +28,7 @@ export default (): React.ReactNode => {
           }}
         />
         <Typography.Title level={2} style={{ textAlign: 'center' }}>
-          <SmileTwoTone /> Ant Design Pro <HeartTwoTone twoToneColor="#eb2f96" /> You
+          <SmileTwoTone /> Mingji Zhu <HeartTwoTone twoToneColor="#eb2f96" /> You
         </Typography.Title>
       </Card>
       <p style={{ textAlign: 'center', marginTop: 24 }}>

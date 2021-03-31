@@ -21,10 +21,10 @@ export default {
   'pages.login.submit': 'Masuk',
   'pages.login.loginWith': 'Masuk dengan :',
   'pages.login.registerAccount': 'Daftar Akun',
-  'pages.welcome.advancedComponent': 'Formulir Lanjutan',
-  'pages.welcome.link': 'Selamat datang',
-  'pages.welcome.advancedLayout': 'Tata letak Lanjutan',
-  'pages.welcome.alertMessage':
+  'pages.resume.advancedComponent': 'Formulir Lanjutan',
+  'pages.resume.link': 'Selamat datang',
+  'pages.resume.advancedLayout': 'Tata letak Lanjutan',
+  'pages.resume.alertMessage':
     'Komponen heavy-duty yang lebih cepat dan lebih kuat telah dirilis.',
   'pages.admin.subPage.title': 'Halaman ini hanya dapat dilihat oleh admin',
   'pages.admin.subPage.alertMessage':

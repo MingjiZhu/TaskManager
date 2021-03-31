@@ -34,3 +34,28 @@ export type TableListParams = {
   filter?: Record<string, any[]>;
   sorter?: Record<string, any>;
 };
+
+export type TaskItem = {
+  id: number;
+  name:string;
+  startAt:Date;
+  endAt:Date;
+  dateTimeRange?:Date | undefined;
+  // type:TypeItem;
+}
+
+export type TaskListParams ={
+  name?:string;
+  id?:number;
+  startAt?:Date;
+  endAt?:Date;
+  pageSize?:number;
+  currentPage?:number;
+  filter?:Record<string,any[]>;
+  sorter?:Record<string,any>;
+}
+
+export type TypeItem ={
+  id: number;
+  name:string
+}

@@ -1,12 +1,9 @@
-import { Tooltip, Tag } from 'antd';
+import { Tooltip, Modal, Button } from 'antd';
 import type { Settings as ProSettings } from '@ant-design/pro-layout';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import type { ConnectProps } from 'umi';
-import { connect, SelectLang } from 'umi';
+import { connect } from 'umi';
 import type { ConnectState } from '@/models/connect';
-import Avatar from './AvatarDropdown';
-import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
 
 export type GlobalHeaderRightProps = {
@@ -14,65 +11,55 @@ export type GlobalHeaderRightProps = {
 } & Partial<ConnectProps> &
   Partial<ProSettings>;
 
-const ENVTagColor = {
-  dev: 'orange',
-  test: 'green',
-  pre: '#87d068',
-};
-
 const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = (props) => {
   const { theme, layout } = props;
   let className = styles.right;
+  const [showContact, setShowContact] = React.useState(false);
 
   if (theme === 'dark' && layout === 'top') {
     className = `${styles.right}  ${styles.dark}`;
   }
 
+  const handleOnClick = () => {
+    setShowContact(true)
+  }
+
+  const handleClose = () => {
+    setShowContact(false)
+  }
+
+  const Mailto = (email:string, subject:string, body:string, children:string ) => {
+    return (
+      <a href={`mailto:${email}?subject=${encodeURIComponent(subject) || ''}&body=${encodeURIComponent(body) || ''}`}>{children}</a>
+    );
+  };
+
   return (
     <div className={className}>
-      <HeaderSearch
-        className={`${styles.action} ${styles.search}`}
-        placeholder="站内搜索"
-        defaultValue="umi ui"
-        options={[
-          { label: <a href="https://umijs.org/zh/guide/umi-ui.html">umi ui</a>, value: 'umi ui' },
-          {
-            label: <a href="next.ant.design">Ant Design</a>,
-            value: 'Ant Design',
-          },
-          {
-            label: <a href="https://protable.ant.design/">Pro Table</a>,
-            value: 'Pro Table',
-          },
-          {
-            label: <a href="https://prolayout.ant.design/">Pro Layout</a>,
-            value: 'Pro Layout',
-          },
-        ]}
-        // onSearch={value => {
-        //   //console.log('input', value);
-        // }}
-      />
-      <Tooltip title="使用文档">
+
+      <Tooltip title="">
         <a
-          style={{
-            color: 'inherit',
-          }}
           target="_blank"
-          href="https://pro.ant.design/docs/getting-started"
+          onClick={handleOnClick}
           rel="noopener noreferrer"
           className={styles.action}
         >
-          <QuestionCircleOutlined />
+          Contact
         </a>
+        <Modal
+          title='Mingji Zhu'
+          width="400px"
+          visible={showContact}
+          onCancel={handleClose}
+          footer={[
+            Mailto("mzhu9815@conestogac.on.ca","","","Send an Email")
+          ]}
+        >
+          <p>Phone: (+1) 226-989-0151</p>
+          <p>Email: mzhu9815@conestogac.on.ca</p>
+          
+        </Modal>
       </Tooltip>
-      <Avatar />
-      {REACT_APP_ENV && (
-        <span>
-          <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
-        </span>
-      )}
-      <SelectLang className={styles.action} />
     </div>
   );
 };
