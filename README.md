@@ -1,3 +1,5 @@
 # TaskManager
-Coming up soon...<br />
-This app will be using Python and Flask at the back end and Typescript and React at the front end. User can manage their own tasks and get visualized report for every month tasks.
+Using React.js and TypeScript<br />
+Allow user to input daily tasks and have visualization of work loads<br />
+<br />
+![plot](project_image.png)
