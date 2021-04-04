@@ -114,8 +114,8 @@ const TableList: React.FC = () => {
   const data: { id: number; hour: number; work: string; date: string; }[] = [];
   const renderTasks = tasks?.map(i => data.push(
     {
-      id: i.id,
-      hour: Math.abs(new Date(i.endAt).getHours() - new Date(i.startAt).getHours()),
+      id: i.id,      
+      hour: Math.abs(new Date(i.endAt) - new Date(i.startAt)) / 36e5,
       work: i.name,
       date:`${i.endAt.toString().substring(0,10)}`
     }))
